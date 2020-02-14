@@ -24,6 +24,12 @@ The library categorizes image probabilities in the following 5 classes:
 
 The demo is a continuous deployment source - Give it a go: http://nsfwjs.com/
 
+Run locally in docker:
+```sh
+docker pull suika/httpbin
+docker run -p 80:80 suika/httpbin
+```
+
 ## How to use the module
 
 With `async/await` support:

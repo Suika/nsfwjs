@@ -1,0 +1,64 @@
+name: buildx
+on:
+  pull_request:
+    types: [closed]
+    branches: master
+  push:
+    branches: master
+
+jobs:
+  build-nsfwjs:
+    runs-on: [ubuntu-latest]
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v1
+      - 
+        name: Setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '10'
+      - 
+        name: Build nsfwjs release
+        run: |
+          yarn prep 
+          cd example/nsfw_demo
+          yarn install 
+          yarn build
+      -
+        name: Set up Docker Buildx
+        id: buildx
+        uses: crazy-max/ghaction-docker-buildx@v1
+        with:
+          version: latest
+      -
+        name: Available platforms
+        run: echo ${{ steps.buildx.outputs.platforms }}
+      - 
+        name: Docker login
+        run: |
+          docker login -u "${DOCKER_REGISTRY_USERNAME}" -p "${DOCKER_REGISTRY_PASSWORD}"
+        env:
+          DOCKER_REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+          DOCKER_REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      -
+        name: Run Buildx
+        run: |
+          docker buildx build \
+            --platform linux/amd64,linux/arm64,linux/ppc64le,linux/s390x,linux/386,linux/arm/v7,linux/arm/v6 \
+            --output "type=image,push=true" \
+            --tag suika/nsfwjs:latest \
+            --file ./Dockerfile .
+      - 
+        name: Docker Hub Description
+        uses: peter-evans/dockerhub-description@v2.1.0
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+          DOCKERHUB_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+          DOCKERHUB_REPOSITORY: suika/httpbin
+      - 
+        name: Docker logout
+        run: |
+          docker logout
+        env:
+          DOCKER_REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
