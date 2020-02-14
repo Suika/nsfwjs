@@ -50,13 +50,6 @@ jobs:
             --tag suika/nsfwjs:latest \
             --file ./Dockerfile .
       - 
-        name: Docker Hub Description
-        uses: peter-evans/dockerhub-description@v2.1.0
-        env:
-          DOCKERHUB_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
-          DOCKERHUB_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
-          DOCKERHUB_REPOSITORY: suika/httpbin
-      - 
         name: Docker logout
         run: |
           docker logout
