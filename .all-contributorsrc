@@ -113,6 +113,44 @@
         "code",
         "doc"
       ]
+    },
+    {
+      "login": "kevinvangelder",
+      "name": "Kevin VanGelder",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/1771152?v=4",
+      "profile": "https://www.infinite.red",
+      "contributions": [
+        "code",
+        "doc"
+      ]
+    },
+    {
+      "login": "TechnikEmpire",
+      "name": "Jesse Nicholson",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/11234763?v=4",
+      "profile": "http://technikempire.com",
+      "contributions": [
+        "data",
+        "ideas"
+      ]
+    },
+    {
+      "login": "camhart",
+      "name": "camhart",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/3038809?v=4",
+      "profile": "https://github.com/camhart",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "Cameron-Burkholder",
+      "name": "Cameron Burkholder",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/13265710?v=4",
+      "profile": "https://github.com/Cameron-Burkholder",
+      "contributions": [
+        "design"
+      ]
     }
   ],
   "contributorsPerLine": 7,
