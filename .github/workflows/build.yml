@@ -20,9 +20,11 @@ jobs:
         with:
           node-version: '10'
       - 
+        name: Set env
+        run: echo "CI= " >> $GITHUB_ENV
+      - 
         name: Build nsfwjs release
         run: |
-          npm install --global yarn
           yarn prep 
           cd example/nsfw_demo
           yarn install 
