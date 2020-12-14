@@ -5,17 +5,18 @@ on:
     branches: master
   push:
     branches: master
+  workflow_dispatch: []
 
 jobs:
   build-nsfwjs:
-    runs-on: [ubuntu-latest]
+    runs-on: [ubuntu-20.04]
     steps:
       -
         name: Checkout
-        uses: actions/checkout@v2.3.3
+        uses: actions/checkout@v2
       - 
         name: Setup node
-        uses: actions/setup-node@v2.1.3
+        uses: actions/setup-node@v2
         with:
           node-version: '10'
       - 
@@ -26,32 +27,56 @@ jobs:
           yarn install 
           yarn build
       -
-        name: Set up Docker Buildx
-        id: buildx
-        uses: crazy-max/ghaction-docker-buildx@v3.3.1
+        name: Docker meta
+        id: docker_meta
+        uses: crazy-max/ghaction-docker-meta@v1
         with:
-          version: latest
+          images: |
+            suika/nsfwjs
+            ghcr.io/suika/nsfwjs
       -
-        name: Available platforms
-        run: echo ${{ steps.buildx.outputs.platforms }}
-      - 
-        name: Docker login
-        run: |
-          docker login -u "${DOCKER_REGISTRY_USERNAME}" -p "${DOCKER_REGISTRY_PASSWORD}"
-        env:
-          DOCKER_REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
-          DOCKER_REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
       -
-        name: Run Buildx
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+        with:
+          buildkitd-flags: "--debug"
+      -
+        name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+      -
+        name: Login to GHCR
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ secrets.GHCR_USERNAME }}
+          password: ${{ secrets.GHCR_TOKEN }}
+      -
+        name: Build
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          file: ./Dockerfile
+          tags: suika/nsfwjs:latest,ghcr.io/suika/nsfwjs:latest
+          platforms: linux/amd64,linux/arm64,linux/ppc64le,linux/s390x,linux/386,linux/arm/v7,linux/arm/v6
+          labels: |
+            ${{ steps.docker_meta.outputs.labels }}
+            org.opencontainers.image.title=NSFWJS
+            org.opencontainers.image.vendor=suika
+      -
+        name: Check manifest
         run: |
-          docker buildx build \
-            --platform linux/amd64,linux/arm64,linux/ppc64le,linux/s390x,linux/386,linux/arm/v7,linux/arm/v6 \
-            --output "type=image,push=true" \
-            --tag suika/nsfwjs:latest \
-            --file ./Dockerfile .
-      - 
-        name: Docker logout
+          docker buildx imagetools inspect suika/nsfwjs:latest
+          docker buildx imagetools inspect ghcr.io/suika/nsfwjs:latest
+      -
+        name: Inspect image
         run: |
-          docker logout
-        env:
-          DOCKER_REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+          docker pull suika/nsfwjs:latest
+          docker image inspect suika/nsfwjs:latest
+          docker pull ghcr.io/suika/nsfwjs:latest
+          docker image inspect ghcr.io/suika/nsfwjs:latest
