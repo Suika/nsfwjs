@@ -127,6 +127,14 @@ Model example - [Graph](https://github.com/infinitered/nsfwjs/tree/master/exampl
 const model = nsfwjs.load('/path/to/different/model/', { type: 'graph' })
 ```
 
+If you're using in the browser and you'd like to subsequently load from indexed db or local storage you can save the underlying model using the appropriate scheme and load from there.
+
+```js
+const initialLoad = await nsfwjs.load('/path/to/different/model')
+await initialLoad.model.save('indexeddb://model')
+const model = await nsfwjs.load('indexeddb://model')
+```
+
 **Parameters**
 
 - optional URL to the `model.json` folder.
@@ -385,6 +393,8 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="http://navendu.me"><img src="https://avatars1.githubusercontent.com/u/49474499?v=4" width="100px;" alt=""/><br /><sub><b>Navendu Pottekkat</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=navendu-pottekkat" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/VladStepanov"><img src="https://avatars0.githubusercontent.com/u/49880862?v=4" width="100px;" alt=""/><br /><sub><b>Vladislav</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=VladStepanov" title="Code">💻</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=VladStepanov" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/nacht42"><img src="https://avatars1.githubusercontent.com/u/37903575?v=4" width="100px;" alt=""/><br /><sub><b>Nacht</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=nacht42" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/kateinkim"><img src="https://avatars.githubusercontent.com/u/53795920?v=4" width="100px;" alt=""/><br /><sub><b>kateinkim</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=kateinkim" title="Code">💻</a> <a href="https://github.com/infinitered/nsfwjs/commits?author=kateinkim" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://janpoonthong.github.io/portfolio/"><img src="https://avatars.githubusercontent.com/u/56725335?v=4" width="100px;" alt=""/><br /><sub><b>jan</b></sub></a><br /><a href="https://github.com/infinitered/nsfwjs/commits?author=JanPoonthong" title="Documentation">📖</a></td>
   </tr>
 </table>
 
